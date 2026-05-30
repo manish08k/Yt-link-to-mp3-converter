@@ -1,6 +1,7 @@
 flask>=3.0.0
 flask-cors>=4.0.0
 yt-dlp>=2024.3.10
+gunicorn>=21.2.0
 
 # Production WSGI — uncomment for scale:
 # gunicorn>=21.2.0
