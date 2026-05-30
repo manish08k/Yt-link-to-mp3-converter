@@ -9,8 +9,6 @@ services:
         value: /opt/render/ffmpeg:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       - key: DOWNLOAD_DIR
         value: /tmp/downloads
-      - key: STATIC_DIR
-        value: ./static
       - key: FILE_TTL
         value: 600
       - key: JOB_TTL

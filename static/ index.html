@@ -799,7 +799,7 @@ function startPoll() {
   clearInterval(pollTimer);
   pollTimer = setInterval(async () => {
     try {
-      const r = await fetch(`${BASE}/api/status/${jobId}`);
+      const r = await fetch(BASE + '/api/status/' + jobId;
       if (!r.ok) { clearInterval(pollTimer); resetBtn(); return; }
       const j = await r.json();
       const s = j.status, p = j.progress || 0;
@@ -837,7 +837,7 @@ async function doDownload() {
   btn.textContent = '⏳  Preparing…';
   btn.disabled = true;
   try {
-    const r = await fetch(`${BASE}/api/download/${jobId}`);
+    const r = await fetch(BASE + '/api/download/' + jobId;
     if (!r.ok) {
       // File expired or job gone — silently re-enable so user can convert again
       setClass('dlBtn', false, 'show');

@@ -34,8 +34,8 @@ log = logging.getLogger('wave')
 _BASE = Path(__file__).parent
 
 class Config:
-    DOWNLOAD_DIR        = Path(os.environ.get('DOWNLOAD_DIR', _BASE / 'downloads'))
-    STATIC_DIR          = Path(os.environ.get('STATIC_DIR',  _BASE / 'static'))
+    DOWNLOAD_DIR        = Path(os.environ.get('DOWNLOAD_DIR', str(_BASE / 'downloads'))).resolve()
+    STATIC_DIR          = Path(os.environ.get('STATIC_DIR',  str(_BASE / 'static'))).resolve()
     MAX_WORKERS         = int(os.environ.get('MAX_WORKERS',     4))
     QUEUE_MAX_SIZE      = int(os.environ.get('QUEUE_MAX_SIZE', 500))
     JOB_TTL_SECONDS     = int(os.environ.get('JOB_TTL',        600))
@@ -463,8 +463,16 @@ def _security_headers(resp):
 # ── Static ────────────────────────────────────────────────────────────────────
 @app.route('/')
 def index():
-    # FIX: serve from the correct static directory (not a hard-coded 'static' string)
-    return send_from_directory(str(Config.STATIC_DIR), 'index.html')
+    # Try resolved STATIC_DIR first, then fallbacks
+    candidates = [
+        Config.STATIC_DIR / 'index.html',
+        Path(__file__).parent / 'static' / 'index.html',
+        Path.cwd() / 'static' / 'index.html',
+    ]
+    for p in candidates:
+        if p.exists():
+            return send_from_directory(str(p.parent), 'index.html')
+    return '<h2>Frontend not found. Ensure static/index.html exists.</h2>', 404
 
 # ── /api/info ─────────────────────────────────────────────────────────────────
 @app.route('/api/info', methods=['POST'])
